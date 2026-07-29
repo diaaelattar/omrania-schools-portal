@@ -25,8 +25,7 @@ export default function AdminLoginPage() {
       setError(json.error || 'حدث خطأ');
       return;
     }
-    router.push('/admin/dashboard');
-    router.refresh();
+    window.location.href = '/admin/dashboard';
   }
 
   return (

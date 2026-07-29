@@ -25,8 +25,7 @@ export default function SchoolLoginPage() {
       setError(json.error || 'حدث خطأ');
       return;
     }
-    router.push(json.mustChangePassword ? '/school/password' : '/school/dashboard');
-    router.refresh();
+    window.location.href = json.mustChangePassword ? '/school/password' : '/school/dashboard';
   }
 
   return (

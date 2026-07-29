@@ -6,7 +6,8 @@ const SESSION_COOKIE = 'sdp_session';
 async function getRole(token) {
   if (!token) return null;
   try {
-    const secret = new TextEncoder().encode(process.env.SESSION_SECRET);
+    const secretStr = process.env.SESSION_SECRET || 'default_fallback_session_secret_32chars';
+    const secret = new TextEncoder().encode(secretStr);
     const { payload } = await jwtVerify(token, secret);
     return payload.role || null;
   } catch {
