@@ -9,6 +9,10 @@ export async function POST(req) {
   }
 
   const supabase = supabaseAdmin();
+  if (supabase.isPlaceholder) {
+    return NextResponse.json({ error: 'لم يتم الاتصال بقاعدة البيانات. تحقق من إضافة NEXT_PUBLIC_SUPABASE_URL و SUPABASE_SERVICE_ROLE_KEY في Vercel' }, { status: 500 });
+  }
+
   const { data: admin, error } = await supabase
     .from('admins')
     .select('id, username, password_hash')
@@ -16,7 +20,7 @@ export async function POST(req) {
     .single();
 
   if (error || !admin) {
-    return NextResponse.json({ error: 'بيانات الدخول غير صحيحة' }, { status: 401 });
+    return NextResponse.json({ error: 'اسم المستخدم غير موجود أو البيانات غير صحيحة' }, { status: 401 });
   }
 
   const ok = await verifyPassword(password, admin.password_hash);
