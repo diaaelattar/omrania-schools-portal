@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import LogoutButton from '@/app/components/LogoutButton';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   const supabase = supabaseAdmin();
 

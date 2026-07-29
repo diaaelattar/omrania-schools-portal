@@ -3,6 +3,8 @@ import { getSession } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import DynamicForm from '@/app/components/DynamicForm';
 
+export const dynamic = 'force-dynamic';
+
 export default async function SchoolFormPage({ params }) {
   const session = await getSession();
   const supabase = supabaseAdmin();

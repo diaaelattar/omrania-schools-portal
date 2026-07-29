@@ -3,6 +3,8 @@ import { getSession } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import LogoutButton from '@/app/components/LogoutButton';
 
+export const dynamic = 'force-dynamic';
+
 export default async function SchoolDashboard() {
   const session = await getSession();
   const supabase = supabaseAdmin();
