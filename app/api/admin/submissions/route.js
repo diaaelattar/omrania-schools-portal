@@ -12,21 +12,56 @@ export async function GET(req) {
 
   const supabase = supabaseAdmin();
 
-  const { data: form } = await supabase
-    .from('form_templates')
-    .select('id, title, schema')
-    .eq('id', formId)
-    .single();
+  try {
+    const [formRes, subsRes, schoolsRes] = await Promise.all([
+      supabase
+        .from('form_templates')
+        .select('id, title, schema, is_active')
+        .eq('id', formId)
+        .maybeSingle(),
+      supabase
+        .from('submissions')
+        .select('id, data, submitted_at, updated_at, schools(id, code, name)')
+        .eq('form_id', formId)
+        .order('updated_at', { ascending: false }),
+      supabase
+        .from('schools')
+        .select('id, code, name')
+        .order('name', { ascending: true }),
+    ]);
 
-  const { data: submissions } = await supabase
-    .from('submissions')
-    .select('id, data, submitted_at, updated_at, schools(id, code, name)')
-    .eq('form_id', formId)
-    .order('updated_at', { ascending: false });
+    if (formRes.error) {
+      return NextResponse.json({ error: 'خطأ في جلب بيانات النموذج: ' + formRes.error.message }, { status: 500 });
+    }
+    if (!formRes.data) {
+      return NextResponse.json({ error: 'النموذج غير موجود أو تم حذفه' }, { status: 404 });
+    }
+    if (schoolsRes.error) {
+      return NextResponse.json({ error: 'خطأ في جلب قائمة المدارس: ' + schoolsRes.error.message }, { status: 500 });
+    }
+    if (subsRes.error) {
+      return NextResponse.json({ error: 'خطأ في جلب الردود: ' + subsRes.error.message }, { status: 500 });
+    }
 
-  const { data: allSchools } = await supabase.from('schools').select('id, code, name');
-  const submittedIds = new Set((submissions || []).map((s) => s.schools?.id));
-  const missing = (allSchools || []).filter((s) => !submittedIds.has(s.id));
+    const form = formRes.data;
+    const submissions = subsRes.data || [];
+    const allSchools = schoolsRes.data || [];
 
-  return NextResponse.json({ form, submissions: submissions || [], missingSchools: missing });
+    const submittedIds = new Set(
+      submissions
+        .map((s) => s.schools?.id)
+        .filter(Boolean)
+    );
+    const missing = allSchools.filter((s) => !submittedIds.has(s.id));
+
+    return NextResponse.json({
+      form,
+      submissions,
+      missingSchools: missing,
+      totalSchoolsCount: allSchools.length,
+    });
+  } catch (err) {
+    return NextResponse.json({ error: 'حدث خطأ غير متوقع: ' + (err.message || 'فشل الاتصال') }, { status: 500 });
+  }
 }
+
