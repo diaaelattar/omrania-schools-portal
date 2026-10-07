@@ -54,10 +54,18 @@ export default function SchoolLoginPage() {
       <div className="w-full max-w-5xl">
         {/* Header */}
         <div className="mb-8 text-center">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-800 text-xs font-semibold mb-3 shadow-sm">
+            <span>إدارة العمرانية التعليمية - التعليم الابتدائي</span>
+          </div>
           <h1 className="text-3xl font-extrabold text-brand-700">بوابة تجميع بيانات وإحصاءات المدارس</h1>
           <p className="mt-2 text-sm text-slate-600">
-            المنظومة الإلكترونية الموحدة لجمع وتدقيق الإحصاءات والبيانات الدورية للمدارس
+            المنظومة الإلكترونية الموحدة لجمع وتدقيق البيانات الدورية للمدارس الابتدائية
           </p>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-xs text-slate-600 font-medium bg-white/70 py-1.5 px-4 rounded-xl border border-slate-200/60 inline-flex shadow-xs">
+            <span>مدير عام الإدارة: <strong className="text-slate-900 font-bold">أ / غادة شحاتة</strong></span>
+            <span className="text-slate-300">•</span>
+            <span>مدير التعليم الابتدائي: <strong className="text-slate-900 font-bold">أ / هشام محمود كامل</strong></span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -175,7 +183,7 @@ export default function SchoolLoginPage() {
                   </span>
                   <div>
                     <strong className="block text-slate-900 font-semibold mb-0.5">إدخال كلمة المرور المعتمدة:</strong>
-                    أدخل كلمة المرور التي تم تسليمها للمدرسة من قبل إدارة الإحصاء، ثم اضغط على زر "دخول لوحة المدرسة".
+                    أدخل كلمة المرور المعتمدة التي تم تسليمها للمدرسة من قبل إدارة العمرانية التعليمية (التعليم الابتدائي)، ثم اضغط على زر "دخول لوحة المدرسة".
                   </div>
                 </li>
 
@@ -234,13 +242,25 @@ export default function SchoolLoginPage() {
                     <span>🔑</span> نسيان كلمة المرور؟
                   </strong>
                   <p className="text-amber-800 leading-relaxed">
-                    في حال تعذر الدخول أو فقدان كلمة المرور، يرجى التواصل فوراً مع مسؤول الإحصاء بالإدارة لإعادة تعيينها.
+                    في حال تعذر الدخول أو فقدان كلمة المرور، يرجى التواصل مع إدارة العمرانية التعليمية (التعليم الابتدائي) لإعادة تعيينها.
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* تذييل رسمي للإدارة والقيادات */}
+        <footer className="mt-12 text-center text-xs text-slate-500 border-t border-slate-200/80 pt-5">
+          <div className="flex flex-wrap items-center justify-center gap-2 font-semibold text-slate-700 mb-1">
+            <span>إدارة العمرانية التعليمية</span>
+            <span>•</span>
+            <span>قسم التعليم الابتدائي</span>
+          </div>
+          <p className="text-slate-500">
+            تحت إشراف الأستاذة / <strong className="text-slate-800">غادة شحاتة</strong> (مدير عام الإدارة) — الأستاذ / <strong className="text-slate-800">هشام محمود كامل</strong> (مدير التعليم الابتدائي)
+          </p>
+        </footer>
       </div>
     </main>
   );

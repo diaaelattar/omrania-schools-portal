@@ -40,7 +40,7 @@ export default async function AdminDashboard() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-brand-700">لوحة تحكم الأدمن</h1>
-          <p className="text-sm text-gray-500">إدارة بوابة تجميع بيانات وإحصاءات المدارس</p>
+          <p className="text-sm text-gray-500">إدارة العمرانية التعليمية - قسم التعليم الابتدائي</p>
         </div>
         <LogoutButton />
       </div>
