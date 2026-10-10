@@ -12,7 +12,7 @@ export async function GET() {
   const supabase = supabaseAdmin();
   const { data, error } = await supabase
     .from('password_reset_requests')
-    .select('id, status, requested_at, schools(id, code, name, username)')
+    .select('id, status, requested_at, schools(id, code, name, username, type)')
     .eq('status', 'pending')
     .order('requested_at', { ascending: true });
   if (error) return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 });

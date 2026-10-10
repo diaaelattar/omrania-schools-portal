@@ -18,6 +18,7 @@ create table if not exists schools (
   id uuid primary key default gen_random_uuid(),
   code text unique not null,             -- كود المدرسة (رقم تعريفي)
   name text not null,                    -- اسم المدرسة
+  type text not null default 'public' check (type in ('public', 'private')), -- نوع المدرسة (public: رسمي | private: خاص)
   username text unique not null,         -- اسم الدخول
   password_hash text not null,
   must_change_password boolean not null default true,

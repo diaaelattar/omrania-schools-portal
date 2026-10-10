@@ -7,6 +7,9 @@ export async function GET(req, { params }) {
   const session = await getSession();
   if (!session || session.role !== 'admin') return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });
 
+  const { searchParams } = new URL(req.url);
+  const typeFilter = searchParams.get('type'); // 'public' | 'private' | 'all'
+
   const supabase = supabaseAdmin();
   const { data: form } = await supabase
     .from('form_templates')
@@ -16,17 +19,29 @@ export async function GET(req, { params }) {
 
   if (!form) return NextResponse.json({ error: 'النموذج غير موجود' }, { status: 404 });
 
-  const { data: submissions } = await supabase
+  const { data: rawSubmissions } = await supabase
     .from('submissions')
-    .select('data, submitted_at, schools(code, name)')
+    .select('data, submitted_at, schools(code, name, type)')
     .eq('form_id', form.id)
     .order('submitted_at', { ascending: true });
 
-  const fields = form.schema.fields || [];
-  const rows = (submissions || []).map((s) => flattenSubmission(fields, s, s.schools));
-  const buffer = buildXlsxBuffer(rows, form.title.slice(0, 30) || 'Data');
+  let submissions = rawSubmissions || [];
+  let typeLabel = 'الكل';
+  if (typeFilter === 'public') {
+    submissions = submissions.filter((s) => (s.schools?.type || 'public') === 'public');
+    typeLabel = 'رسمي';
+  } else if (typeFilter === 'private') {
+    submissions = submissions.filter((s) => (s.schools?.type || 'public') === 'private');
+    typeLabel = 'خاص';
+  }
 
-  const filename = `${form.title.replace(/[^\w\u0600-\u06FF-]+/g, '_')}.xlsx`;
+  const fields = form.schema.fields || [];
+  const rows = submissions.map((s) => flattenSubmission(fields, s, s.schools));
+  const sheetName = `${form.title.slice(0, 20)}_${typeLabel}`.slice(0, 31);
+  const buffer = buildXlsxBuffer(rows, sheetName);
+
+  const baseTitle = form.title.replace(/[^\w\u0600-\u06FF-]+/g, '_');
+  const filename = `${baseTitle}_${typeLabel}.xlsx`;
 
   return new NextResponse(buffer, {
     headers: {

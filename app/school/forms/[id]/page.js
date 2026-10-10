@@ -34,13 +34,20 @@ export default async function SchoolFormPage({ params }) {
     .maybeSingle();
 
   return (
-    <main className="mx-auto max-w-xl p-6">
+    <main className="mx-auto max-w-3xl p-6">
       <Link href="/school/dashboard" className="mb-4 inline-block text-sm text-brand-600 underline">
         ← العودة للرئيسية
       </Link>
-      <h1 className="mb-1 text-xl font-bold text-brand-700">{form.title}</h1>
-      {form.description && <p className="mb-4 text-sm text-gray-500">{form.description}</p>}
-      <DynamicForm formId={form.id} fields={form.schema.fields || []} initialData={existing?.data} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-brand-700">{form.title}</h1>
+        {form.description && <p className="mt-1 text-sm text-gray-500">{form.description}</p>}
+      </div>
+      <DynamicForm
+        formId={form.id}
+        formTitle={form.title}
+        fields={form.schema.fields || []}
+        initialData={existing?.data}
+      />
     </main>
   );
 }

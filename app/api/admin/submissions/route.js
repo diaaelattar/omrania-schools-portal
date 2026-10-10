@@ -8,6 +8,7 @@ export async function GET(req) {
 
   const { searchParams } = new URL(req.url);
   const formId = searchParams.get('form');
+  const typeFilter = searchParams.get('type'); // 'public' | 'private' | 'all'
   if (!formId) return NextResponse.json({ error: 'form مطلوب' }, { status: 400 });
 
   const supabase = supabaseAdmin();
@@ -21,12 +22,12 @@ export async function GET(req) {
         .maybeSingle(),
       supabase
         .from('submissions')
-        .select('id, data, submitted_at, updated_at, schools(id, code, name)')
+        .select('id, data, submitted_at, updated_at, schools(id, code, name, type)')
         .eq('form_id', formId)
         .order('updated_at', { ascending: false }),
       supabase
         .from('schools')
-        .select('id, code, name')
+        .select('id, code, name, type')
         .order('name', { ascending: true }),
     ]);
 
@@ -44,11 +45,19 @@ export async function GET(req) {
     }
 
     const form = formRes.data;
-    const submissions = subsRes.data || [];
-    const allSchools = schoolsRes.data || [];
+    let rawSubmissions = subsRes.data || [];
+    let allSchools = schoolsRes.data || [];
+
+    // Apply type filter if specified and not 'all'
+    if (typeFilter === 'public' || typeFilter === 'private') {
+      allSchools = allSchools.filter((s) => (s.type || 'public') === typeFilter);
+      rawSubmissions = rawSubmissions.filter(
+        (s) => (s.schools?.type || 'public') === typeFilter
+      );
+    }
 
     const submittedIds = new Set(
-      submissions
+      rawSubmissions
         .map((s) => s.schools?.id)
         .filter(Boolean)
     );
@@ -56,7 +65,7 @@ export async function GET(req) {
 
     return NextResponse.json({
       form,
-      submissions,
+      submissions: rawSubmissions,
       missingSchools: missing,
       totalSchoolsCount: allSchools.length,
     });
