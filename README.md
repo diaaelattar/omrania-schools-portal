@@ -1,3 +1,8 @@
+> [!WARNING]
+> **هذا المشروع مؤرشف (2026-10-14) ولم يعد قيد التطوير.**
+> المنصة الفعلية التي تعمل على `https://omranya.nebraspro.com` هي مشروع **مختلف تماماً**:
+> [`diaaelattar/school-data-collector`](https://github.com/diaaelattar/school-data-collector) (Vite + React) — المسار المحلي `D:\SchoolDataCollector`.
+
 # بوابة تجميع بيانات المدارس
 
 نظام لتجميع بيانات دورية من المدارس عبر نماذج ديناميكية، مع تصدير إكسيل ومزامنة اختيارية مع Google Sheets. مبني بـ Next.js 14 + Supabase، ومُجهز للنشر المجاني على Vercel.
